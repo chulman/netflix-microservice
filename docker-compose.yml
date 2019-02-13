@@ -1,0 +1,58 @@
+version: "2.1"
+
+services:
+  eureka:
+    build:
+      context: eureka-server
+      dockerfile: Dockerfile
+    image: chulman/microservice/eureka:latest
+    container_name: eureka
+    ports:
+      - 8761:8761
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 60s
+      retries: 15
+
+  gateway:
+    build:
+      context: zuul-proxy
+      dockerfile: Dockerfile
+    image: chulman/microservice/gateway:latest
+    container_name: gateway
+    environment:
+      - JVM_MEMORY=-Xmx4g -Xms4g -XX:MetaspaceSize=200m
+    ports:
+      - 8080:8080
+    links:
+      - eureka:eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/proxy/healthcheck"]
+      interval: 10s
+      timeout: 60s
+      retries: 15
+    depends_on:
+      eureka:
+        condition: service_healthy
+
+  api:
+    build:
+      context: api-server
+      dockerfile: Dockerfile
+    image: chulman/microservice/api:latest
+    container_name: api
+    ports:
+      - 8081:8081
+    links:
+      - eureka:eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/api/healthcheck"]
+      interval: 10s
+      timeout: 60s
+      retries: 15
+    depends_on:
+        eureka:
+          condition: service_healthy
+        gateway:
+          condition: service_healthy

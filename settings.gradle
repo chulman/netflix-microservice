@@ -1,0 +1,6 @@
+rootProject.name = 'microservice'
+
+include 'eureka-server'
+include 'auth-server'
+include 'api-server'
+include 'zuul-proxy'
