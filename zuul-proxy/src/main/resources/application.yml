@@ -8,7 +8,7 @@ zuul:
   routes:
     api-server:
       path: /api/member/**   # zuul.routes.<serviceId>.path : 해당 path의 요청을 <serviceId>로 보낸다
-      stripPrefix: dock  # false인 경우 uri를 모두 보내며(/api/members/1), true인 경우에는 matching된 값을 제외하고 보낸다(/1)
+      stripPrefix: false  # false인 경우 uri를 모두 보내며(/api/members/1), true인 경우에는 matching된 값을 제외하고 보낸다(/1)
 
 
 server:
