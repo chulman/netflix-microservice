@@ -1,10 +1,4 @@
-server:
-  port: 8081
+# Default active profile
 spring:
-  application.name: member-api # eureka에 등록되는 serivce id
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka:8761/eureka
+  profiles:
+    active: dev

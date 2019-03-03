@@ -1,0 +1,38 @@
+server:
+  port: 8081
+spring:
+  application.name: api-server # eureka에 등록되는 serivce id
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+      settings:
+        web-allow-others: true
+
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:testDB
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+    register-with-eureka: false
+    fetch-registry: false
+
+notification:
+  apns:
+    keyID: 58NFPB4T3D
+    teamID: RAH8A8577Q
+    secret: MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgw0ZMwcJGll6TEENFvZViA4L0DkgBIoimg7TNZJlC086gCgYIKoZIzj0DAQehRANCAASgSWWCACWdMdD7R44xvzdrkSfD7O0udiHzgtdh9NFI3eHXd+KsLExXqu7JWMAkhJmWRgUvjZBF2MKj7ouGpWL5
+    production: false
