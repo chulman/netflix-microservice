@@ -29,10 +29,3 @@ eureka:
       defaultZone: http://eureka:8761/eureka
     register-with-eureka: false
     fetch-registry: false
-
-notification:
-  apns:
-    keyID: 58NFPB4T3D
-    teamID: RAH8A8577Q
-    secret: MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgw0ZMwcJGll6TEENFvZViA4L0DkgBIoimg7TNZJlC086gCgYIKoZIzj0DAQehRANCAASgSWWCACWdMdD7R44xvzdrkSfD7O0udiHzgtdh9NFI3eHXd+KsLExXqu7JWMAkhJmWRgUvjZBF2MKj7ouGpWL5
-    production: false
