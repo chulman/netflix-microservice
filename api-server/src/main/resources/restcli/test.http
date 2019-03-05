@@ -1,0 +1,30 @@
+
+### zuul call
+GET http://localhost:8080/api/member/1
+
+### direct api server call
+GET http://localhost:8081/api/member/1
+
+
+
+###
+POST http://localhost:8081/api/notification/v1/apns/send
+Content-Type: application/json
+
+{
+  "bundle": "com.chulm.notification",
+  "deviceToken": "f606c721405d977eac0199a7b34d6701b988337441aa4fb3382f834bf9ac86fe",
+  "name": "chul",
+  "os": "IOS",
+  "payload": {
+    "aps": {
+      "alert": {
+        "title": "title",
+        "body": "body"
+      },
+      "sound": "default"
+    }
+  }
+}
+
+###

@@ -8,37 +8,37 @@ import lombok.Data;
 public class NotificationResult {
 
     private String apns_id;
-    private ApnsHttpsCode apnsHttpsCode;
+    private StatusCode statusCode;
 
     private String reason;
     private String timeStamp;
 
 
-    public static ApnsHttpsCode valueOf(int headerCode) {
+    public static StatusCode valueOf(int headerCode) {
         switch (headerCode) {
             case 200:
-                return ApnsHttpsCode.Success;
+                return StatusCode.Success;
             case 400:
-                return ApnsHttpsCode.BadReqest;
+                return StatusCode.BadReqest;
             case 403:
-                return ApnsHttpsCode.UnAuthorized;
+                return StatusCode.UnAuthorized;
             case 405:
-                return ApnsHttpsCode.InvalidMethod;
+                return StatusCode.InvalidMethod;
             case 410:
-                return ApnsHttpsCode.InActiveDeviceToken;
+                return StatusCode.InActiveDeviceToken;
             case 413:
-                return ApnsHttpsCode.PayLoadTooLarge;
+                return StatusCode.PayLoadTooLarge;
             case 429:
-                return ApnsHttpsCode.TooManyRequestSameDevice;
+                return StatusCode.TooManyRequestSameDevice;
             case 500:
-                return ApnsHttpsCode.InternalServerError;
+                return StatusCode.InternalServerError;
             case 503:
-                return ApnsHttpsCode.Unavailable;
+                return StatusCode.Unavailable;
         }
         return null;
     }
 
-    enum ApnsHttpsCode {
+    enum StatusCode {
 
         Success(200),
 
@@ -60,7 +60,7 @@ public class NotificationResult {
 
         private int value;
 
-        private ApnsHttpsCode(int value) {
+        private StatusCode(int value) {
             this.value = value;
         }
 

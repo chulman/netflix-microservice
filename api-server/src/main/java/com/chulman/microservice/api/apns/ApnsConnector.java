@@ -2,7 +2,6 @@ package com.chulman.microservice.api.apns;
 
 import com.chulman.microservice.api.exception.AuthenticationException;
 import com.chulman.microservice.notification.domain.model.Notification;
-import com.chulman.microservice.notification.domain.model.NotificationResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.bootstrap.Bootstrap;
@@ -14,7 +13,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import lombok.extern.slf4j.Slf4j;
-import rx.Observable;
 
 import java.io.IOException;
 
@@ -25,13 +23,11 @@ public class ApnsConnector {
     private final ObjectMapper MAPPER = new ObjectMapper();
 
     private ApnsResponseHandler apnsResponseHandler;
-    private ApnsInitializer apnsInitializer;
-
 
     private Channel channel;
     private EventLoopGroup eventLoopGroup;
     private Bootstrap bootstrap;
-
+    private int eventloopThreadCount = 1;
 
     private String host = "api.development.push.apple.com";
     private int port = 443;
@@ -44,10 +40,11 @@ public class ApnsConnector {
     }
 
     public boolean connect() throws Exception {
-        eventLoopGroup = new NioEventLoopGroup(1);
-        bootstrap = new Bootstrap();
-        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new ApnsInitializer(apnsResponseHandler));
 
+        eventLoopGroup = new NioEventLoopGroup(eventloopThreadCount);
+        bootstrap = new Bootstrap();
+
+        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new ApnsInitializer(apnsResponseHandler));
         ChannelFuture cf = bootstrap.connect(host, port).sync();
         channel = cf.channel();
 
@@ -57,8 +54,6 @@ public class ApnsConnector {
 
     public ChannelFuture send(Notification notification, HttpHeaders httpHeaders) throws AuthenticationException {
 
-        log.info("deviceToken[{}], payload {}", notification.getDeviceToken(), notification.getPayload());
-        httpHeaders.entries().stream().forEach(header -> log.info("headers {}", header));
         FullHttpRequest request;
         String message = "";
         try {
@@ -67,13 +62,12 @@ public class ApnsConnector {
             e.printStackTrace();
         }
 
-
         request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST,
                 "https://" + host + "/3/device/" + notification.getDeviceToken(), Unpooled.copiedBuffer(message.getBytes()),
                 new DefaultHttpHeaders(), httpHeaders);
 
-        ChannelFuture channelFuture = channel.writeAndFlush(request);
-        return channelFuture;
+        log.info("send to {}, message={}", notification.getDeviceToken(), notification.getPayload());
+        return  channel.writeAndFlush(request);
     }
 
 
@@ -93,5 +87,9 @@ public class ApnsConnector {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public void setEventloopThreadCount(int eventloopThreadCount) {
+        this.eventloopThreadCount = eventloopThreadCount;
     }
 }

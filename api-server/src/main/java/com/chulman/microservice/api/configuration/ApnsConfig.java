@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Slf4j
 @Configuration
-@PropertySource(value = "classpath:/apns.yml")
+@PropertySource(value = "classpath:/apns.properties")
 public class ApnsConfig {
 
     @Value("${notification.apns.keyID}")
@@ -23,6 +23,9 @@ public class ApnsConfig {
 
     @Value("${notification.apns.production}")
     boolean production;
+
+    @Value("${notification.apns.eventloopThreadCount}")
+    int eventloopThreadCount;
 
     @Bean
     public JwtProvider getJwtProvider() {
@@ -41,6 +44,7 @@ public class ApnsConfig {
 
         ApnsConnector apnsConnector = new ApnsConnector(getApnsResponseHandler());
         apnsConnector.setToken(getJwtProvider().createToken(keyID,teamID,secret));
+        apnsConnector.setEventloopThreadCount(eventloopThreadCount);
         apnsConnector.setHost(host);
         apnsConnector.connect();
         return apnsConnector;

@@ -15,10 +15,12 @@ import java.util.Map;
 public class Notification {
     String createdAt;
     long id;
+    String apns_id;
     String name;
     String os;
     String bundle;
     String deviceToken;
+
 
     Map<String,Object> payload = new HashMap<>();
 
