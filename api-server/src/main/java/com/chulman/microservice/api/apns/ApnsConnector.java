@@ -12,6 +12,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http2.DefaultHttp2Connection;
+import io.netty.handler.codec.http2.Http2Connection;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -28,27 +30,29 @@ public class ApnsConnector {
     private EventLoopGroup eventLoopGroup;
     private Bootstrap bootstrap;
     private int eventloopThreadCount = 1;
+    private Http2Connection http2Connection;
 
     private String host = "api.development.push.apple.com";
     private int port = 443;
 
     private String token;
 
-
     public ApnsConnector(ApnsResponseHandler apnsResponseHandler) {
         this.apnsResponseHandler = apnsResponseHandler;
     }
 
     public boolean connect() throws Exception {
-
+        http2Connection = new DefaultHttp2Connection(false);
         eventLoopGroup = new NioEventLoopGroup(eventloopThreadCount);
         bootstrap = new Bootstrap();
 
-        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new ApnsInitializer(apnsResponseHandler));
+        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new ApnsInitializer(apnsResponseHandler,http2Connection));
         ChannelFuture cf = bootstrap.connect(host, port).sync();
         channel = cf.channel();
 
         log.info("connected : {}, apns-end-point: {}", cf.isSuccess(), cf.channel().remoteAddress());
+        log.info("http2 maximum avaliable remote stream count : {}", http2Connection.remote().maxActiveStreams());
+
         return cf.isSuccess();
     }
 
@@ -91,5 +95,9 @@ public class ApnsConnector {
 
     public void setEventloopThreadCount(int eventloopThreadCount) {
         this.eventloopThreadCount = eventloopThreadCount;
+    }
+
+    public Http2Connection getHttp2Connection() {
+        return http2Connection;
     }
 }

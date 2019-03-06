@@ -5,6 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http2.*;
+import io.netty.handler.logging.LogLevel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
@@ -17,16 +18,18 @@ public class ApnsInitializer extends ChannelInitializer<SocketChannel> {
 
     @Autowired
     private ApnsResponseHandler apnsResponseHandler;
+
     private HttpToHttp2ConnectionHandler httpToHttp2ConnectionHandlerBuilder;
+    private Http2Connection http2Connection;
 
-
-    public ApnsInitializer(ApnsResponseHandler apnsResponseHandler){
+    public ApnsInitializer(ApnsResponseHandler apnsResponseHandler, Http2Connection http2Connection){
         this.apnsResponseHandler = apnsResponseHandler;
+        this.http2Connection = http2Connection;
     }
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
 
-        final Http2Connection http2Connection = new DefaultHttp2Connection(false);
+
         httpToHttp2ConnectionHandlerBuilder = new HttpToHttp2ConnectionHandlerBuilder()
                 .frameListener(new DelegatingDecompressorFrameListener(
                         http2Connection,
@@ -35,6 +38,10 @@ public class ApnsInitializer extends ChannelInitializer<SocketChannel> {
                                 .propagateSettings(true)
                                 .build()))
                 .connection(http2Connection)
+      //        .initialSettings()    //http2 initail frame setting
+                .encoderEnforceMaxConcurrentStreams(true)   // Concurrent stream max is exceed, input encoder queue.
+                .gracefulShutdownTimeoutMillis(3000)
+                .frameLogger(new Http2FrameLogger(LogLevel.INFO, Http2ConnectionHandler.class))
                 .build();
 
         final SslContext sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();

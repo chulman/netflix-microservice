@@ -1,7 +1,6 @@
 package com.chulman.microservice.api.service;
 
 import com.chulman.microservice.notification.domain.model.Notification;
-import com.chulman.microservice.notification.domain.model.NotificationResult;
 import com.chulman.microservice.notification.domain.repository.NotificationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ public class NotificationService {
     ApnsProvider apnsProvider;
     @Autowired
     NotificationRepository notificationRepository;
+
 
     public Observable<Integer> sendToApns(Notification notification) {
         return apnsProvider.send(notification)

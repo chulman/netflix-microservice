@@ -1,10 +1,8 @@
 package com.chulman.microservice.api.service;
 
 import com.chulman.microservice.api.apns.ApnsConnector;
-import com.chulman.microservice.api.apns.ApnsResponseHandler;
 import com.chulman.microservice.api.utils.ApnsHeader;
 import com.chulman.microservice.notification.domain.model.Notification;
-import com.chulman.microservice.notification.domain.model.NotificationResult;
 import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -25,13 +23,9 @@ public class ApnsProvider {
     @Autowired
     private ApnsConnector apnsConnector;
 
-    @Autowired
-    private ApnsResponseHandler apnsResponseHandler;
-
     public Observable<Void> send(Notification notification) {
 
         notification.setApns_id(UUID.randomUUID().toString());
-
         ChannelFuture future = apnsConnector.send(notification, getHeader(notification));
         return Observable.from(future).filter(aVoid -> future.isSuccess())
                                       .doOnNext(aVoid -> log.info("send future : {}", future.isSuccess()))
