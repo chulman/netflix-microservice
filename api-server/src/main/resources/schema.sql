@@ -8,7 +8,7 @@ CREATE TABLE NOTIFICATION (
   OS VARCHAR(10) NOT NULL,
   BUNDLE varchar(100) NOT NULL,
   PAYLOAD varchar(4000) NOT NULL,
-  STATUS varchar(10),
+  STATUS varchar(50),
   createdAt TIMESTAMP NOT NULL default now(),
   PRIMARY KEY (ID)
 );
