@@ -1,9 +1,9 @@
 
 ### zuul call
-GET http://localhost:8080/api/member/1
+GET http://localhost:8084/api/member/1
 
 ### direct api server call
-GET http://localhost:8081/api/member/1
+GET http://localhost:8084/api/member/1
 
 
 
@@ -26,5 +26,3 @@ Content-Type: application/json
     }
   }
 }
-
-###

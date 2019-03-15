@@ -20,7 +20,7 @@ public class NotificationService {
 
     public Observable<Integer> sendToApns(Notification notification) {
         return apnsProvider.send(notification)
-                .switchMap(aVoid -> notificationRepository.insert(notification))
+                .flatMap(aVoid -> notificationRepository.insert(notification))
                 .filter(integer -> integer==1);
     }
 }

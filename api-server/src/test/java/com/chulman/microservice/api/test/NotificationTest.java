@@ -1,12 +1,12 @@
 package com.chulman.microservice.api.test;
 
 import com.chulman.microservice.notification.domain.model.Notification;
+import io.reactivex.Observable;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class NotificationTest {
 
@@ -16,11 +16,10 @@ public class NotificationTest {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "http://localhost:8081/api/notification/v1/apns/send";
+        String url = "http://localhost:8084/api/notification/v1/apns/send";
         URI uri = URI.create(url);
 
-        //setting max stream.
-        int size = 500;
+        int size = 5;
 
         for (int i = 0; i < size; i++) {
 
@@ -44,5 +43,13 @@ public class NotificationTest {
             Integer rs = restTemplate.postForObject(uri, notification, Integer.class);
         }
         System.err.println("end time ="+(System.currentTimeMillis()-startTime));
+    }
+
+    @Test
+    public void test() {
+        Observable.fromCallable(() ->{ throw new RuntimeException("Test exception"); })
+                .doOnNext(i -> System.out.println("doOnNext : " + i))
+                .doOnError(i -> System.out.println("doOnError : " + i))
+                .blockingFirst();
     }
 }

@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import java.util.UUID;
 
@@ -29,8 +28,7 @@ public class ApnsProvider {
         ChannelFuture future = apnsConnector.send(notification, getHeader(notification));
         return Observable.from(future).filter(aVoid -> future.isSuccess())
                                       .doOnNext(aVoid -> log.info("send future : {}", future.isSuccess()))
-                                      .doOnError(throwable -> throwable.getCause())
-                                      .subscribeOn(Schedulers.io());
+                                      .doOnError(throwable -> log.error("{}", throwable.getCause()));
     }
 
     private HttpHeaders getHeader(Notification notification) {
