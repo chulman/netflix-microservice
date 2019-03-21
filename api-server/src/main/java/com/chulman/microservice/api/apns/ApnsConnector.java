@@ -56,7 +56,7 @@ public class ApnsConnector {
         return cf.isSuccess();
     }
 
-    public ChannelFuture send(Notification notification, HttpHeaders httpHeaders) throws AuthenticationException {
+    public ChannelFuture send(Notification notification, HttpHeaders httpHeaders) throws Exception {
 
         FullHttpRequest request;
         String message = "";

@@ -17,10 +17,14 @@ public class NotificationService {
     @Autowired
     NotificationRepository notificationRepository;
 
-
     public Observable<Integer> sendToApns(Notification notification) {
         return apnsProvider.send(notification)
-                .flatMap(aVoid -> notificationRepository.insert(notification))
-                .filter(integer -> integer==1);
+                           .filter(NotificationService::convertBool)
+                           .flatMap(o ->  notificationRepository.insert(notification))
+                           .filter(integer -> integer==1);
+    }
+
+    private static boolean convertBool(Object o){
+        return (boolean)o;
     }
 }

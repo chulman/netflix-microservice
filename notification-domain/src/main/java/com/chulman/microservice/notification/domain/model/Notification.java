@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class Notification {
-    String createdAt;
+    String createdAt = "";
     long id;
     String apns_id;
     String name;
