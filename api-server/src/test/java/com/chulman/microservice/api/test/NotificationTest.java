@@ -16,7 +16,7 @@ public class NotificationTest {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "http://localhost:8084/api/notification/v1/apns/send";
+        String url = "http://localhost:8081/api/notification/v1/apns/send";
         URI uri = URI.create(url);
 
         int size = 5;
@@ -48,8 +48,8 @@ public class NotificationTest {
     @Test
     public void test() {
         Observable.fromCallable(() ->{ throw new RuntimeException("Test exception"); })
-                .doOnNext(i -> System.out.println("doOnNext : " + i))
-                .doOnError(i -> System.out.println("doOnError : " + i))
-                .blockingFirst();
+                   .doOnNext(i -> System.out.println("doOnNext : " + i))
+                   .doOnError(i -> System.out.println("doOnError : " + i))
+                   .blockingFirst();
     }
 }

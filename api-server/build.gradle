@@ -8,7 +8,11 @@ bootJar {
 
 dependencies {
     compile project(':notification-domain')
+    //rxjava
     compile('io.reactivex.rxjava2:rxjava:2.2.2')
+    //rxnetty
+    testCompile('io.reactivex:rxnetty-http:0.5.3')
+
     compile('com.netflix.hystrix:hystrix-javanica:1.5.10')
 
     compile('org.springframework.boot:spring-boot-starter-jdbc')
