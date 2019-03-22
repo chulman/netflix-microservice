@@ -1,4 +1,4 @@
-description 'api-gateway'
+description 'api-server'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
