@@ -25,7 +25,7 @@ public class NotificationController {
         return toDeferredResult(notificationService.sendToApns(notification));
     }
 
-
+    //
     private static <T> DeferredResult<T> toDeferredResult(Observable<T> observable) {
         DeferredResult<T> deferredResult = new DeferredResult<>();
         observable.subscribe(deferredResult::setResult, deferredResult::setErrorResult);
