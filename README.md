@@ -1,0 +1,1 @@
+![Travis CI status](https://travis-ci.org/chulman/netflix-microservice.svg?branch=feature%2Fnotification-isolation)
